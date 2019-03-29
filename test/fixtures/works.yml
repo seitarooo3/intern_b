@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  work_date: 2019-03-16
+  time_in: 2019-03-16 12:03:01
+  time_out: MyString
+  note: MyString
+  user: one
+
+two:
+  work_date: 2019-03-16
+  time_in: 2019-03-16 12:03:01
+  time_out: MyString
+  note: MyString
+  user: two

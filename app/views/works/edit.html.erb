@@ -1,0 +1,36 @@
+<% provide(:title, '勤怠情報編集') %>
+<h1>勤怠情報編集</h1>
+  <div>
+    <table class="table-bordered table-condensed" align="center" width="100%">
+      <thead>
+      <tr>
+        <th>日付</th>
+        <th>曜日</th>
+        <th>出社</th>
+        <th>退社</th>
+        <th>在社時間</th>
+        <th>備考</th>
+      </tr>
+      </thead>
+      <tbody>
+      <%= form_for(@user, url: update_works_path, method: :patch) do |f| %>
+      <%= render 'shared/error_messages' %>
+        <% @works.each do |work| %>
+          <%= fields_for "works[]", work do |af| %>
+          <tr>
+            <td><%= work.work_date.month %>月<%= work.work_date.day %>日</td>
+            <td><%= %w(日 月 火 水 木 金 土)[work.work_date.wday] %>曜日</td>
+            <td><%= af.time_field :time_in, class: "form-control" %></td>
+            <td><%= af.time_field :time_out, class: "form-control" %></td>
+            <td>在社時間</td>
+            <td><%= af.text_field :note, class: "form-control" %></td>
+          </tr>
+          <% end %>
+        <% end %>
+        <%= f.submit "更新", class: "btn btn-default" %> 
+        <%= link_to "キャンセル", current_user, class: "btn btn-default" %>
+      <% end %> 
+      </tbody>
+      
+    </table>
+    </div>

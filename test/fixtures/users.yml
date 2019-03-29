@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  email: MyString
+  password_digest: MyString
+  basic_time: 2019-03-16 02:31:59
+  work_time: 2019-03-16 02:31:59
+  admin: false
+  dep: MyString
+
+two:
+  name: MyString
+  email: MyString
+  password_digest: MyString
+  basic_time: 2019-03-16 02:31:59
+  work_time: 2019-03-16 02:31:59
+  admin: false
+  dep: MyString

@@ -1,0 +1,85 @@
+
+<!--勤怠編集ボタン-->
+<br>
+<div>
+  <%= link_to "勤怠を編集", edit_works_url(@user.id,@work.work_date), class: "btn btn-default" %>
+</div>
+
+<br>
+
+<!--勤怠テーブル-->
+<div class = "work_table">
+  <table class="table-bordered table-condensed" align="center" width="100%">
+    <%= render 'shared/error_messages' %>
+  <tr>
+    <th rowspan="2">日付</th>
+    <th rowspan="2">曜日</th>
+    <th colspan="3">出社</th>
+    <th colspan="3">退社</th>
+    <th rowspan="2">在社時間</th>
+    <th rowspan="2">備考</th>
+  </tr>
+  <tr>
+    <th>時</th>
+    <th>分</th>
+    <th></th>
+    <th>時</th>
+    <th>分</th>
+    <th></th>
+  </tr>
+  
+  <!--繰り返し-->
+  
+  <% @works.each do |day| %>
+  <tr>
+    <td><%= day.work_date.month %>月<%= day.work_date.day %>日</td>
+    <td><%= %w(日 月 火 水 木 金 土)[day.work_date.wday] %>曜日</td>
+    <% @work = @user.works.find_by(work_date: day.work_date) %>
+    
+    <% if @work.time_in.present? %>
+    <td><%= @work.time_in.hour  %>時</td>
+    <td><%= @work.time_in.min  %>分</td>
+    <td></td>
+    <% elsif @work.work_date == Date.today %>
+    <td>時</td>
+    <td>分</td>
+    <td><%= button_to "出社", user_works_path(@user), class: "btn btn-default" %></td>
+    <% else %>
+    <td>時</td>
+    <td>分</td>
+    <td></td>
+    <% end %>
+    
+    <% if @work.time_out.present? %>
+    <td><%= @work.time_out.hour  %>時</td>
+    <td><%= @work.time_out.min  %>分</td>
+    <td></td>
+    <% elsif @work.work_date == Date.today %>
+    <td>時</td>
+    <td>分</td>
+    <td><%= button_to "退社", user_works_path(@user), class: "btn btn-default" %></td>
+    <% else %>
+    <td>時</td>
+    <td>分</td>
+    <td></td>
+    <% end %>
+    <td>
+      <% if @work.time_in.present? && @work.time_out.present? %>
+          <%= working_hours(@work.time_in, @work.time_out) %>
+          <% seconds = (@work.time_out - @work.time_in).to_i %>
+          <% @total_seconds = @total_seconds.to_i + seconds %>
+      <% end %>
+    </td>
+    <td><%= @work.note %></td>
+  </tr>
+  <% end %>
+  
+  <tr>
+    <td colspan = "2">総合勤務時間:<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time).to_f * @work_sum %> <% end %></td>
+    <td colspan = "6"></td>
+    <td>在社時間合計:<%= working_hours_sum(@total_seconds) unless @total_seconds.nil? %>
+    </td>
+  </tr>
+  </table>
+  <br>
+</div>

@@ -1,0 +1,14 @@
+<% provide(:title, 'Home') %>
+<h1>勤怠管理システム</h1>
+<div class = login_button>
+  <% if !logged_in? %>
+　  <%= link_to "ログイン", login_path, class: "btn btn-primary" %>
+    <br>
+    <br>
+    <p>新規登録は<%= link_to "こちら", new_user_path %>から登録</p>
+  <% else %>
+    <p>今日も1日頑張りましょう！</p>
+  <% end %>
+  
+</div>
+

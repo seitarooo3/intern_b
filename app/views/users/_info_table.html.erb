@@ -1,0 +1,22 @@
+<div class="info-table">
+  <table class="table-bordered table-condensed" align="center" width="100%">
+  <tr>
+    <td><%= link_to "◀︎", prev_month %> <%= @today.year %>年<%= @today.month %>月<%= link_to "▶︎︎", next_month %> </td>
+    <td>指定勤務時間：<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time) %> <% end %></td>
+    <td colspan="3">基本時間：<% if @user.basic_time.present? %><%= format_basic_time(@user.work_time) %><% end %></td>
+    <td>初日：<%= @today.month %>月<%= @today.beginning_of_month.day %>日</td>
+  </tr>
+  
+  <tr>
+    <td>所属：<%= @user.dep %></td>
+    <td>氏名：<%= @user.name %></td>
+    
+    <td>コード</td>
+    <td></td>
+    <td>出勤日数:<%= @work_sum %>日</td>
+    
+    <td>締日：<%= @today.month %>月<%= @today.end_of_month.day %>日</td>
+  </tr>
+    
+  </table>
+</div>
