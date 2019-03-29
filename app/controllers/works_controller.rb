@@ -43,12 +43,8 @@ class WorksController < ApplicationController
     if works_check?
       works_params.each do |id, item|
         work = Work.find(id)
-        if work.work_date > Date.today
-          flash[:danger] = 'エラーが発生しました。'
-        else
-          work.update_attributes(item)
-          flash[:info] = '更新が完了しました。'
-        end
+        work.update_attributes(item) 
+        flash[:info] = '更新が完了しました。'
       end
     else
         flash[:danger] = 'エラーが発生しました。'
