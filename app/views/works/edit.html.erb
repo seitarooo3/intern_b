@@ -28,7 +28,13 @@
               <td><%= af.time_field :time_out, class: "form-control" %></td>
             <% end %>
             
-            <td>在社時間</td>
+            <td>
+              <% if work.time_in.present? && work.time_out.present? %>
+                <%= working_hours(work.time_in, work.time_out) %>
+                <% seconds = (work.time_out - work.time_in).to_i %>
+                <% @total_seconds = @total_seconds.to_i + seconds %>
+              <% end %>
+            </td>
             <td><%= af.text_field :note, class: "form-control" %></td>
           </tr>
           <% end %>
