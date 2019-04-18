@@ -1,0 +1,39 @@
+<% provide(:title, '拠点一覧') %>
+<h1>拠点一覧</h1>
+
+<%= link_to "拠点新規作成", new_branch_path, remote: true, class: "btn btn-default" %>
+<div id="branch-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<br>
+<br>
+
+<div class = "branches_table">
+  <table class="table-bordered table-condensed" align="center" width="100%">
+    
+  <tr>
+    <th>拠点番号</th>
+    <th>拠点名</th>
+    <th>稼働状況</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+  <% @branches.each do |b| %>
+  <tr>
+    <td><%= b.branch_id %></td>
+    <td><%= b.branch_name %></td>
+    <% if b.branch_status %>
+      <td>稼働中</td>
+    <% else %>
+      <td>準備中</td>
+    <% end %>
+    <td><%= link_to "編集", edit_branch_url(b.id), remote: true, class: "btn btn-default" %></td>
+    <td><%= link_to "削除", branch_path(b.id), method: :delete,
+                            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-default" %></td>
+  </tr>
+  <% end %>
+  </table>
+</div>
+
+<br>
+<br>

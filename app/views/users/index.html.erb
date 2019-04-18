@@ -1,5 +1,6 @@
 <% provide(:title, 'ユーザー一覧') %>
 <h1>ユーザー一覧</h1>
+
 <%= will_paginate %>
 
 <ul class="users">
@@ -7,9 +8,59 @@
     <li>
   <%= link_to user.name, user %>
   <% if @current_user.admin? && !current_user?(user) %>
-    ｜<%= link_to "基本情報編集", basic_info_path(user) %>
-    | <%= link_to "削除", user, method: :delete,
+  <%= button_to "削除", user, method: :delete, class: "btn btn-primary",
                          data: { confirm: "削除してよろしいですか？" } %>
+  
+  <div class="panel-group" id=accordion>
+	  <div class="panel panel-default">
+		  <div class="panel-heading">
+			  <h4 class="panel-title">
+				  <button data-toggle="collapse" data-parent="#accordion" class="btn btn-primary" data-target="#AccordionCollapse<%= user.id %>">編集</a>
+				</h4>
+		  </div>
+		  <div id=AccordionCollapse<%= user.id %> class="panel-collapse collapse">
+			  <div class="panel-body">
+			    <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+            <%= form_for(user) do |f| %>
+　　        <!--ラベルが表示名、フィールドがDBのカラム-->
+            <br>
+            <%= f.label:ユーザー名 %>
+            <%= f.text_field :name, class: 'form-control' %>
+            
+            <%= f.label:カードID %>
+          　<%= f.text_field :card_id, class: 'form-control' %>
+          　
+          　<%= f.label:社員ID %>
+          　<%= f.text_field :employee_id, class: 'form-control' %>
+            
+          　<%= f.label:メールアドレス %>
+          　<%= f.email_field :email, class: 'form-control' %>
+            
+            <%= f.label:部署 %>
+          　<%= f.text_field :dep, class: 'form-control' %>
+          　
+          　<%= f.label:指定勤務開始時間 %>
+          　<%= f.time_field :designed_time_in, class: "form-control" %>
+          　
+          　<%= f.label:指定勤務終了時間 %>
+            <%= f.time_field :designed_time_out, class: "form-control" %>
+          　  
+            <%= f.label:パスワード %>
+            <%= f.password_field :password, class: 'form-control' %>
+            
+            <%= f.label:password_confirmation, "パスワード（確認用）" %>
+            <%= f.password_field :password_confirmation, class: 'form-control' %>
+            <br>
+            <%= f.submit "更新", class: "btn btn-primary" %>
+            
+          　<% end %>
+       　 </div>
+      　</div>
+			 </div>
+			</div>
+		</div>
+	</div>
   <% end %>
 </li>
   <% end %>

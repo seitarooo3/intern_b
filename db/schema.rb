@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190316120301) do
+ActiveRecord::Schema.define(version: 20190417123652) do
+
+  create_table "branches", force: :cascade do |t|
+    t.integer "branch_id"
+    t.string "branch_name"
+    t.boolean "branch_status", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -18,10 +26,15 @@ ActiveRecord::Schema.define(version: 20190316120301) do
     t.string "password_digest"
     t.datetime "basic_time", default: "2019-03-19 22:30:00"
     t.datetime "work_time", default: "2019-03-19 23:00:00"
+    t.datetime "designed_time_in", default: "2019-03-20 00:00:00"
+    t.datetime "designed_time_out", default: "2019-03-20 09:00:00"
     t.boolean "admin", default: false
     t.string "dep"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "card_id"
+    t.integer "employee_id"
+    t.boolean "sup", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
