@@ -3,8 +3,6 @@
 
 /* mixins, variables, etc. */
 
-$gray-light: #eaeaea;
-
 /* universal */
 
 body {
@@ -45,7 +43,7 @@ h2 {
   margin-bottom: 30px;
   text-align: center;
   font-weight: normal;
-  color: $gray-light;
+  color: #eaeaea;
 }
 
 p {
@@ -79,11 +77,51 @@ p {
   li {
     overflow: auto;
     padding: 10px 0;
-    border-bottom: 1px solid $gray-lighter;
+    border-bottom: 1px solid #eaeaea;
   }
 }
 
 .login_button{
   text-align: center;
   margin:0 auto;
+}
+
+// モーダル
+.modal-content {
+    position:fixed;
+    display:none;
+    z-index:2;
+    width:50%;
+    margin:0;
+    padding:10px 20px;
+    border:2px solid #aaa;
+    background:#fff;
+}
+
+.modal-content p {
+    margin:0;
+    padding:0;
+}
+
+.modal-overlay {
+    z-index:1;
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:120%;
+    background-color:rgba(0,0,0,0.75);
+}
+
+.modal-open:hover {
+    cursor:pointer;
+}
+
+.modal-close {
+    text-decoration:underline;
+}
+
+.modal-close:hover {
+    cursor:pointer;
 }

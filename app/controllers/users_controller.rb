@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     @work = @user.works.find_by(work_date: @today)
     
     if @work.nil?
+      # 月間勤怠情報の空データを作成
       (@today.beginning_of_month..@today.end_of_month).each do |i|
         record = @user.works.build(work_date: i)
         record.save
@@ -29,6 +30,50 @@ class UsersController < ApplicationController
     
     # 勤務日数を格納
     @work_sum = @works.where.not(time_in: nil).count
+    
+    # 該当ユーザーの表示月の申請状況を格納
+    @month_approval = @user.month_approvals.find_by(work_month: @today.beginning_of_month)
+    
+    # 該当ユーザーの表示月の月別申請がなければ、表示用の空データを作成
+    if @month_approval.nil?
+      record = @user.month_approvals.build(work_month: @today.beginning_of_month)
+      record.save
+      @month_approval = @user.month_approvals.find_by(work_month: @today.beginning_of_month)
+    end
+
+    # TBLから承認者がログインユーザー且つ月別勤怠申請中のデータを格納
+    @month_applyings = MonthApproval.where(month_approval_status: 2).where(month_approver_id: current_user.id)
+    
+    month_applying_users_ids = []
+    @month_applyings.each do |applying|
+      month_applying_users_ids.push(applying.user_id)
+    end
+    
+    @month_applying_users = User.where(id: month_applying_users_ids)
+    
+    # 残業申請用オブジェクトの作成
+    @over_approval = OverApproval.new
+    
+    # TBLから承認者がログインユーザー且つ残業申請中のデータを格納
+    @over_applyings = OverApproval.where(over_approval_status: 2).where(over_approver_id: current_user.id)
+    
+    over_applying_users_ids = []
+    @over_applyings.each do |applying|
+      over_applying_users_ids.push(applying.user_id)
+    end
+    
+    @over_applying_users = User.where(id: over_applying_users_ids)
+    
+    @sup_users = User.where(sup: true)
+    
+    @work_changings = Work.where(work_change_status: 2).where(work_change_approver_id: current_user.id)
+    
+    work_changing_users_ids = []
+    @work_changings.each do |applying|
+      work_changing_users_ids.push(applying.user_id)
+    end
+    
+    @work_changing_users = User.where(id: work_changing_users_ids)
     
   end
   
@@ -67,6 +112,20 @@ class UsersController < ApplicationController
     @users = User.paginate(page: params[:page])
   end
   
+  def index_time_in
+    today = Date.current
+    @time_in_works = Work.where(work_date: today, time_out: nil)
+    @time_in_works = @time_in_works.where.not(time_in: nil)
+    
+    time_in_users_ids = []
+    @time_in_works.each do |works|
+      time_in_users_ids.push(works.user_id)
+    end
+    
+    @time_in_users = User.where(id: time_in_users_ids)
+    
+  end
+  
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "削除しました。"
@@ -86,6 +145,12 @@ class UsersController < ApplicationController
       render 'edit_basic_info'
     end
     
+  end
+  
+  def import
+    # fileはtmpに自動で一時保存される
+    User.import(params[:file])
+    redirect_to users_url, notice: "ユーザーを追加しました。"
   end
   
     private
@@ -110,7 +175,7 @@ class UsersController < ApplicationController
     
     def correct_user
       @user = User.find(params[:id])
-      if @user != current_user && false == current_user.admin?
+      if @user != current_user && false == current_user.admin? && false == current_user.sup?
         flash[:danger] = "権限がありません。"
         redirect_to(root_url)
       end
@@ -122,6 +187,5 @@ class UsersController < ApplicationController
         redirect_to(root_url)
       end
     end
-
-      
+    
 end

@@ -21,11 +21,12 @@ module WorksHelper
       elsif item[:time_in].blank? || item[:time_out].blank?
         result_works_check = false
         break
-      elsif item[:time_in] > item[:time_out]
+      elsif item[:time_in] > item[:time_out] && "false" == item[:checked_next_day]
         result_works_check = false
         break
       end
     end
+    return result_works_check
   end
   
 end

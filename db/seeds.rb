@@ -7,13 +7,27 @@ User.create!(
   password: "takosei3",
   basic_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
-  admin: true,
-  sup: true,
+  admin: false,
+  sup: false,
   dep: "consulting"
 )
 
 User.create!(
   id: 2,
+  name: "konosuke",
+  email: "konosuke.aoki@gmail.com",
+  card_id: "takosei3",
+  employee_id: 12345,
+  password: "takosei3",
+  basic_time: "2019/02/20 07:30",
+  work_time: "2019/02/20 07:30",
+  admin: false,
+  sup: true,
+  dep: "boxer"
+)
+
+User.create!(
+  id: 3,
   name: "takanosuke",
   email: "takanosuke.aoki@gmail.com",
   card_id: "takosei3",
@@ -21,8 +35,8 @@ User.create!(
   password: "takosei3",
   basic_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
-  admin: false,
-  sup: false,
+  admin: true,
+  sup: true,
   dep: "sales"
 )
 
@@ -32,6 +46,7 @@ Branch.create!(
   branch_name: "Tokyo",
   branch_status: false
 )
+
 
 # 59.times do |n|
 #   name  = Faker::Name.name

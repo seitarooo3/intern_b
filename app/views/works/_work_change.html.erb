@@ -1,0 +1,56 @@
+
+<div id="work_change" class="modal-content">
+  <% if @work_changing_users.present? %>
+    <%= form_for(@work_changing_users.to_s, url: sup_update_path, method: :post) do |f| %>
+      
+      <% @work_changing_users.each do |user| %>
+        
+        <table class="table table-bordered table table-striped" align="center" width="100%">
+          <caption><%= user.name %>からの勤怠変更申請</caption>  
+      
+          <tr>
+            <th rowspan="2">日付</th>
+            <th rowspan="2">曜日</th>
+            <th colspan="2">変更前</th>
+            <th colspan="2">変更後</th>
+            <th rowspan="2">備考</th>
+            <th rowspan="2">指示者確認印</th>
+            <th rowspan="2">変更</th>
+            <th rowspan="2">勤怠を確認する</th>
+          </tr>
+          
+          <tr>
+            <th>出社</th>
+            <th>退社</th>
+            <th>出社</th>
+            <th>退社</th>
+          </tr>
+        
+          <% user.works.where(work_change_status: 2, work_change_approver_id: current_user.id).each do |af| %>
+            <%= fields_for "works[]", af do |aaf| %>
+            <tr>
+              <td><%= af.work_date.month %>/<%= af.work_date.day %></td>
+              <td><%= %w(日 月 火 水 木 金 土)[af.work_date.wday] %></td>
+              <td>変更前</td>
+              <td>変更前</td>
+              <td><%= af.time_in.strftime("%H:%M") %></td>
+              <td><%= af.time_out.strftime("%H:%M") %></td>
+              <td><%= af.note %></td>
+              <td><%= aaf.select :work_change_status, Work.work_change_statuses.keys.to_a, {include_blank: true} %></td>
+              <td><%= aaf.check_box :checked_confirm, {:checked => false} , "true", "false" %></td>
+              <td><%= link_to "確認", user_url(af.user_id,af.work_date), class: "btn btn-primary" %></td>
+            </tr>
+            <% end %>
+            
+          <% end %>
+        <% end %>
+        
+        
+      <%= f.submit "更新", class: "btn btn-primary" %> 
+      <% end %>
+      
+      </table>
+  <% else %>
+    申請はありません。
+  <% end %>
+</div>

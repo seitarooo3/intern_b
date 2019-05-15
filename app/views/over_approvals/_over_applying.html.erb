@@ -1,0 +1,36 @@
+<% @works.each do |day| %>
+
+<div id="over_applying<%= day.id %>" class="modal-content modal-lg">
+
+    <%= form_for(@over_approval) do |f| %>
+      
+        <table class="table table-bordered table table-striped" align="center" width="100%">
+          <caption>残業申請</caption>  
+      
+          <tr>
+            <th>日付
+            <th>曜日
+            <th>終了予定時刻
+            <th>翌日
+            <th>業務処理内容
+            <th>承認者
+          </tr>
+        
+            <tr>
+              <td><%= day.work_date %></td>
+              <td><%= %w(日 月 火 水 木 金 土)[day.work_date.wday] %></td>
+              <td><%= f.time_field :scheduled_over_time_out, class: "form-control" %></td>
+              <td><%= f.check_box :checked_next_day, {:checked => false} , "true", "false" %></td>
+              <td><%= f.text_field :note, class: "form-control" %></td>
+              <td><%= f.collection_select :over_approver_id, @sup_users, :id, :name %></td>
+              <%= f.hidden_field :over_approval_status, :value => "申請中" %>
+              <%= f.hidden_field :user_id, :value => @user.id %>
+              <%= f.hidden_field :over_date, :value => day.work_date %>
+            </tr>
+        
+      <%= f.submit "申請", class: "btn btn-primary" %> 
+      <% end %>
+      </table>
+
+</div>
+<% end %>

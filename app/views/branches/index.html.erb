@@ -1,11 +1,33 @@
 <% provide(:title, '拠点一覧') %>
 <h1>拠点一覧</h1>
 
-<%= link_to "拠点新規作成", new_branch_path, remote: true, class: "btn btn-default" %>
-<div id="branch-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<button type="button" class="btn btn-primary modal-open" data-target="new_branch" >拠点新規作成</button>
 
-<br>
-<br>
+<div id="new_branch" class="modal-content">
+  <br>
+  <br>
+  <h1>拠点新規作成</h1>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <%= form_for(@branch, remote: true) do |f| %>
+      
+　　　  <!--ラベルが表示名、フィールドがDBのカラム-->
+        <br>
+        <%= f.label :拠点番号 %>
+        <%= f.text_field :branch_id, class: 'form-control' %>
+        
+        <%= f.label :拠点名 %>
+        <%= f.text_field :branch_name, class: 'form-control' %>
+
+        <br>
+        <%= f.submit "新規作成", class: "btn btn-primary" %>
+        <% end %>
+        <br>
+        <br>
+      </div>
+    </div>
+</div>
+
 
 <div class = "branches_table">
   <table class="table-bordered table-condensed" align="center" width="100%">
@@ -27,9 +49,35 @@
     <% else %>
       <td>準備中</td>
     <% end %>
-    <td><%= link_to "編集", edit_branch_url(b.id), remote: true, class: "btn btn-default" %></td>
+    <td><button type="button" class="btn btn-primary modal-open" data-target= "edit_branch_<%= b.branch_id %>" >編集</button></td>
+      <div id="edit_branch_<%= b.branch_id %>" class="modal-content">
+        <br>
+        <br>
+        <h1>拠点情報編集</h1>
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+            <%= form_for(b) do |f| %>
+            <%= render 'shared/error_messages' %>
+      
+　　      　<!--ラベルが表示名、フィールドがDBのカラム-->
+            <br>
+            <%= f.label :拠点番号 %>
+            <%= f.text_field :branch_id, class: 'form-control' %>
+
+            <%= f.label :拠点名 %>
+            <%= f.text_field :branch_name, class: 'form-control' %>
+
+            <br>
+            <%= f.submit "更新", class: "btn btn-primary" %>
+            <% end %>
+            <br>
+            <br>
+         </div>
+       </div>
+      </div>
+      
     <td><%= link_to "削除", branch_path(b.id), method: :delete,
-                            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-default" %></td>
+                            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %></td>
   </tr>
   <% end %>
   </table>

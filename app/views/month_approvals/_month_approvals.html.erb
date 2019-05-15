@@ -1,0 +1,41 @@
+
+<div id="month_approval" class="modal-content">
+      
+  <% if @month_applying_users.present? %>
+    <%= form_for(@month_applying_users.to_s, url: sup_update_month_approval_path, method: :post) do |f| %>
+      
+      <% @month_applying_users.each do |user| %>
+        
+        <table class="table table-bordered table table-striped" align="center" width="100%">
+          <caption><%= user.name %>からの月別勤怠申請</caption>  
+      
+          <tr>
+            <th>月
+            <th>承認可否
+            <th>変更
+            <th>勤怠を確認する
+          </tr>
+        
+          <% user.month_approvals.where(month_approval_status: 2, month_approver_id: current_user.id).each do |af| %>
+            <%= fields_for "month_approvals[]", af do |aaf| %>
+            <tr>
+              <td><%= aaf.text_field :work_month, class: 'form-control', :readonly => true %></td>
+              <td><%= aaf.select :month_approval_status, MonthApproval.month_approval_statuses.keys.to_a, {include_blank: true} %></td>
+              <td><%= aaf.check_box :checked, {:checked => false} , "true", "false" %></td>
+              <td><%= link_to "確認", user_url(af.user_id,af.work_month), class: "btn btn-primary" %></td>
+            </tr>
+            <% end %>
+            
+          <% end %>
+        <% end %>
+        
+        
+      <%= f.submit "更新", class: "btn btn-primary" %> 
+      <% end %>
+      
+      </table>
+  <% else %>
+    申請はありません。
+  <% end %>
+    
+</div>

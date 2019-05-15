@@ -1,0 +1,50 @@
+
+<div id="overwork_approval" class="modal-content">
+  <% if @over_applying_users.present? %>
+    <%= form_for(@over_applying_users.to_s, url: sup_update_over_approval_path, method: :post) do |f| %>
+      
+      <% @over_applying_users.each do |user| %>
+        
+        <table class="table table-bordered table table-striped" align="center" width="100%">
+          <caption><%= user.name %>からの残業申請</caption>  
+      
+          <tr>
+            <th>日付
+            <th>曜日
+            <th>終了予定時間
+            <th>指定勤務終了時間
+            <th>時間外勤務
+            <th>業務処理内容
+            <th>指示者確認印
+            <th>変更
+            <th>勤怠を確認する
+          </tr>
+        
+          <% user.over_approvals.where(over_approval_status: 2, over_approver_id: current_user.id).each do |af| %>
+            <%= fields_for "over_approvals[]", af do |aaf| %>
+            <tr>
+              <td><%= af.over_date.month %>/<%= af.over_date.day %></td>
+              <td><%= %w(日 月 火 水 木 金 土)[af.over_date.wday] %></td>
+              <td><%= af.scheduled_over_time_out.strftime("%H:%M") %></td>
+              <td><%= user.designed_time_out.strftime("%H:%M") %></td>
+              <td><%= over_work_hours(user,af) %></td>
+              <td><%= af.note %></td>
+              <td><%= aaf.select :over_approval_status, OverApproval.over_approval_statuses.keys.to_a, {include_blank: true} %></td>
+              <td><%= aaf.check_box :checked_confirm, {:checked => false} , "true", "false" %></td>
+              <td><%= link_to "確認", user_url(af.user_id,af.over_date), class: "btn btn-primary" %></td>
+            </tr>
+            <% end %>
+            
+          <% end %>
+        <% end %>
+        
+        
+      <%= f.submit "更新", class: "btn btn-primary" %> 
+      <% end %>
+      
+      </table>
+  <% else %>
+    申請はありません。
+  <% end %>
+
+</div>

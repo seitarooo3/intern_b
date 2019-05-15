@@ -1,66 +1,107 @@
 
+<!--お知らせ-->
+
+<div>
+<% if @user == current_user && true == current_user.sup? %>
+
+  <a class = "modal-open" data-target = "month_approval">【月別勤怠申請のお知らせ】</a>
+  <% if @month_applyings.any? %>
+    <%= @month_applyings.count %>件の申請があります！！
+  <% end %><br>
+  <%= render 'month_approvals/month_approvals' %>
+    
+  <a class = "modal-open" data-target = "work_change">【勤怠変更申請のお知らせ】</a>
+  <% if @work_changings.any? %>
+    <%= @work_changings.count %>件の申請があります！！
+  <% end %><br>
+  <%= render 'works/work_change' %>
+    
+  <a class = "modal-open" data-target = "overwork_approval">【残業申請のお知らせ】</a>
+  <% if @over_applyings.any? %>
+    <%= @over_applyings.count %>件の申請があります！！
+  <% end %><br>
+  <%= render 'over_approvals/over_approvals' %>
+    
+<% end %>
+</div>
+
 <!--勤怠編集ボタン-->
 <br>
 <div>
-  <%= link_to "勤怠を編集", edit_works_url(@user.id,@work.work_date), class: "btn btn-default" %>
+  <% if @user == current_user %>
+    <%= link_to "勤怠を編集", edit_works_url(@user.id,@work.work_date), class: "btn btn-primary" %>
+    <%= link_to "勤怠ログ", work_log_index_path, class: "btn btn-primary" %>
+    <%= link_to "CSV出力", index_works_path(format: :csv), class: "btn btn-primary" %>
+  <% end %>
 </div>
+
+
 
 <br>
 
 <!--勤怠テーブル-->
 <div class = "work_table">
-  <table class="table-bordered table-condensed" align="center" width="100%">
+  <table class="table table-bordered" align="center" width="100%">
     <%= render 'shared/error_messages' %>
-  <tr>
-    <th rowspan="2">日付</th>
-    <th rowspan="2">曜日</th>
-    <th colspan="3">出社</th>
-    <th colspan="3">退社</th>
+  <tr bgcolor="#f0f8ff">
+    <th rowspan="3">残業申請</th>
+    <th rowspan="3">日付</th>
+    <th rowspan="3">曜日</th>
+    <th colspan="6">【実績】</th>
+    <th colspan="4">【所定外勤務】</th>
+  </tr>
+  <tr bgcolor="#f0f8ff">
+    <th colspan="2">出社</th>
+    <th colspan="2">退社</th>
     <th rowspan="2">在社時間</th>
     <th rowspan="2">備考</th>
+    <th rowspan="2">終了予定時間</th>
+    <th rowspan="2">時間外勤務</th>
+    <th rowspan="2">業務処理内容</th>
+    <th rowspan="2">指示者確認印</th>
   </tr>
-  <tr>
-    <th>時</th>
-    <th>分</th>
-    <th></th>
-    <th>時</th>
-    <th>分</th>
-    <th></th>
+  <tr bgcolor="#f0f8ff">
+    <th>出社時刻</th>
+    <th>出社ボタン</th>
+    <th>退社時刻</th>
+    <th>退社ボタン</th>
   </tr>
   
   <!--繰り返し-->
   
   <% @works.each do |day| %>
+  
   <tr>
-    <td><%= day.work_date.month %>月<%= day.work_date.day %>日</td>
-    <td><%= %w(日 月 火 水 木 金 土)[day.work_date.wday] %>曜日</td>
+    <td>
+      <% if @user == current_user %>
+        <button type="button" class="btn btn-primary modal-open" data-target = "over_applying<%= day.id %>">残業申請</button>
+        <%= render 'over_approvals/over_applying' %>
+      <% end %>
+    </td>
+    
+    <td><%= day.work_date.strftime("%m/%d") %></td>
+    <td><%= %w(日 月 火 水 木 金 土)[day.work_date.wday] %></td>
     <% @work = @user.works.find_by(work_date: day.work_date) %>
     
     <% if @work.time_in.present? %>
-    <td><%= @work.time_in.hour  %>時</td>
-    <td><%= @work.time_in.min  %>分</td>
+    <td><%= @work.time_in.strftime("%H:%M")  %></td>
     <td></td>
     <% elsif @work.work_date == Date.today %>
-    <td>時</td>
-    <td>分</td>
-    <td><%= button_to "出社", user_works_path(@user), class: "btn btn-default" %></td>
+    <td></td>
+    <td><% if @user == current_user %><%= button_to "出社", user_works_path(@user), class: "btn btn-primary" %><% end %></td>
     <% else %>
-    <td>時</td>
-    <td>分</td>
+    <td></td>
     <td></td>
     <% end %>
     
     <% if @work.time_out.present? %>
-    <td><%= @work.time_out.hour  %>時</td>
-    <td><%= @work.time_out.min  %>分</td>
+    <td><%= @work.time_out.strftime("%H:%M")  %></td>
     <td></td>
     <% elsif @work.work_date == Date.today %>
-    <td>時</td>
-    <td>分</td>
-    <td><%= button_to "退社", user_works_path(@user), class: "btn btn-default" %></td>
+    <td></td>
+    <td><% if @user == current_user %><%= button_to "退社", user_works_path(@user), class: "btn btn-primary" %><% end %></td>
     <% else %>
-    <td>時</td>
-    <td>分</td>
+    <td></td>
     <td></td>
     <% end %>
     <td>
@@ -71,15 +112,47 @@
       <% end %>
     </td>
     <td><%= @work.note %></td>
+    
+    <% if true == @user.over_approvals.find_by(over_date: @work.work_date).present? %>
+      <% @over_approval = @user.over_approvals.find_by(over_date: @work.work_date) %>
+      <td><%= @over_approval.scheduled_over_time_out.strftime("%H:%M") %></td>
+      <td><%= over_work_hours(@user,@over_approval) %> h</td>
+      <td><%= @over_approval.note %></td>
+    <% else %>
+      <td></td>
+      <td></td>
+      <td></td>
+    <% end %>
+      <td>
+        <% if true == @user.over_approvals.find_by(over_date: @work.work_date).present? %>
+          <% @sup_user_over_approval = User.find(@over_approval.over_approver_id) %>
+          <%= @sup_user_over_approval.name %>：残業<%= @over_approval.over_approval_status %>
+        <% end %>
+        <% if "申請中" == @work.work_change_status || "承認" == @work.work_change_status || "否認" == @work.work_change_status  %>
+        <% puts @work.work_change_approver_id %>
+          <% @sup_user_work_change = User.find(@work.work_change_approver_id) %>
+          <%= @sup_user_work_change.name %>：勤怠変更<%= @work.work_change_status %>
+        <% end %>
+      </td>
   </tr>
   <% end %>
   
   <tr>
-    <td colspan = "2">総合勤務時間:<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time).to_f * @work_sum %> <% end %></td>
-    <td colspan = "6"></td>
-    <td>在社時間合計:<%= working_hours_sum(@total_seconds) unless @total_seconds.nil? %>
+    <td colspan = "7">総合勤務時間:<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time).to_f * @work_sum %> <% end %></td>
+    <td colspan = "2">在社時間合計:<%= working_hours_sum(@total_seconds) unless @total_seconds.nil? %></td>
+    <td colspan = "4">
+      月別勤怠申請状況：<%= @month_approval.month_approval_status %>
+      <% if @user == current_user %>
+        <%= form_for @month_approval do |f| %>
+          <%= f.label :sup %>
+          <%= f.collection_select :month_approver_id, User.where(sup: true), :name, :name %>
+          <%= f.hidden_field :work_month, :value => @today %>
+          <%= f.submit "申請", class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
     </td>
   </tr>
   </table>
+  
   <br>
 </div>

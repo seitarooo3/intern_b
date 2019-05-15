@@ -8,8 +8,10 @@
         <th>曜日</th>
         <th>出社</th>
         <th>退社</th>
+        <th>翌日</th>
         <th>在社時間</th>
         <th>備考</th>
+        <th>指示者確認印</th>
       </tr>
       </thead>
       <tbody>
@@ -18,8 +20,8 @@
         <% @works.each do |work| %>
           <%= fields_for "works[]", work do |af| %>
           <tr>
-            <td><%= work.work_date.month %>月<%= work.work_date.day %>日</td>
-            <td><%= %w(日 月 火 水 木 金 土)[work.work_date.wday] %>曜日</td>
+            <td><%= work.work_date.strftime("%m/%d") %></td>
+            <td><%= %w(日 月 火 水 木 金 土)[work.work_date.wday] %></td>
             <% if work.work_date > Date.today %>
               <td><%= af.time_field :time_in, class: "form-control" , :readonly => true %></td>
               <td><%= af.time_field :time_out, class: "form-control" , :readonly => true %></td>
@@ -27,7 +29,7 @@
               <td><%= af.time_field :time_in, class: "form-control" %></td>
               <td><%= af.time_field :time_out, class: "form-control" %></td>
             <% end %>
-            
+            <td><%= af.check_box :checked_next_day, {:checked => false} , "true", "false" %></td>
             <td>
               <% if work.time_in.present? && work.time_out.present? %>
                 <%= working_hours(work.time_in, work.time_out) %>
@@ -36,11 +38,13 @@
               <% end %>
             </td>
             <td><%= af.text_field :note, class: "form-control" %></td>
+            <td><%= af.collection_select :work_change_approver_id, @sup_users, :id, :name, :include_blank => true %></td>
+                <%= af.hidden_field :work_change_status, :value => "申請中" %>
           </tr>
           <% end %>
         <% end %>
-        <%= f.submit "更新", class: "btn btn-default" %> 
-        <%= link_to "キャンセル", current_user, class: "btn btn-default" %>
+        <%= f.submit "更新", class: "btn btn-primary" %> 
+        <%= link_to "キャンセル", current_user, class: "btn btn-primary" %>
       <% end %> 
       </tbody>
       

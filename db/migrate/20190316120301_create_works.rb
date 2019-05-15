@@ -5,6 +5,10 @@ class CreateWorks < ActiveRecord::Migration[5.1]
       t.datetime :time_in
       t.datetime :time_out
       t.string :note
+      t.integer :work_change_status
+      t.integer :work_change_approver_id
+      t.string :checked_next_day
+      t.string :checked_confirm
       t.references :user, foreign_key: true
 
       t.timestamps

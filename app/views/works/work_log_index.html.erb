@@ -1,0 +1,48 @@
+<% provide(:title, '勤怠ログ') %>
+<h1>勤怠ログ</h1>
+
+<%= form_tag(work_log_index_path,:method => 'get') do %>
+  <div class="col-xs-3">
+    <%= text_field_tag "year", "2019年", class: 'form-control', :readonly => true %>
+    <%= select_tag "month", options_for_select([["1月", "01"],["2月","02"],["3月","03"],["4月","04"],["5月","05"],["6月","06"],["7月","07"],["8月","08"],["9月","09"],["10月","10"],["11月","11"],["12月","12"]]), class: 'form-control' %>
+    <%= submit_tag '検索', :name => nil, class: 'form-control' %>
+  <br>
+  </div>
+<% end %>
+
+<div class = "work_log_table">
+  <table class="table table-bordered" align="center" width="100%">
+    <tr>
+      <th>日付</th>
+      <th>勤怠変更前出社時間</th>
+      <th>勤怠変更前退社時間</th>
+      <th>変更後出社</th>
+      <th>変更後退社</th>
+      <th>指示者</th>
+      <th>承認日</th>
+    </tr>
+    
+    <% unless @work_logs.nil? %>
+      <% @work_logs.each do |log| %>
+      <tr>
+        <td><%= log.work_date.strftime("%m/%d") %></td>
+        <td>
+          <% unless log.pre_time_in.nil? %>
+            <%= log.pre_time_in.strftime("%H:%M") %>
+          <% end %>
+        </td>
+        <td>
+          <% unless log.pre_time_out.nil? %>
+            <%= log.pre_time_out.strftime("%H:%M") %>
+          <% end %>
+        </td>
+        <td><%= log.post_time_in.strftime("%H:%M") %></td>
+        <td><%= log.post_time_out.strftime("%H:%M") %></td>
+        <td><%= log.work_change_approver_name %></td>
+        <td><%= log.updated_at.strftime("%Y/%m/%d") %></td> 
+      </tr>
+      <% end %>
+    <% end %>
+    
+  </table>
+</div>
