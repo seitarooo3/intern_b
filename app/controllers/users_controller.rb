@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user,   only: [:edit, :update, :show]
   before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index]
+  before_action :admin_user_true, only: [:show]
   
   def show
     @user = User.find(params[:id])
@@ -65,6 +66,7 @@ class UsersController < ApplicationController
     @over_applying_users = User.where(id: over_applying_users_ids)
     
     @sup_users = User.where(sup: true)
+    @sup_users = @sup_users.where.not(id: @user.id)
     
     @work_changings = Work.where(work_change_status: 2).where(work_change_approver_id: current_user.id)
     
@@ -101,10 +103,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if true == @user.update_attributes(user_params)
       flash[:success] = "更新完了しました。"
-      redirect_to @user
+      redirect_to users_path
     else
       flash.now[:danger] = 'エラーが発生しました。'
-      render 'edit'
+      render users_path
     end
   end
   
@@ -184,6 +186,13 @@ class UsersController < ApplicationController
     def admin_user
       if false == current_user.admin?
         flash[:danger] = "管理者権限がありません。"
+        redirect_to(root_url)
+      end
+    end
+    
+    def admin_user_true
+      if true == current_user.admin?
+        flash[:danger] = "管理者は利用できません。"
         redirect_to(root_url)
       end
     end

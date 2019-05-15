@@ -1,4 +1,5 @@
 class OverApprovalsController < ApplicationController
+  before_action :admin_user_true, only: [:create, :sup_update, :show]
   
   # 残業申請を新規or更新するメソッド
   def create
@@ -54,10 +55,13 @@ class OverApprovalsController < ApplicationController
       # チェックがtrueのレコードのみ更新
       if item[:checked_confirm] == "true"
         over_approval.update_attributes(item)
+        flash[:success] = '残業申請を承認/否認しました。'
+      else
+        flash[:success] = '変更にチェックされていない為、残業申請は更新しておりません。'
       end
     end
     
-    flash[:success] = '残業申請を承認/否認しました。'
+    
     redirect_to user_url(@user)
   
   end
@@ -84,6 +88,13 @@ class OverApprovalsController < ApplicationController
       
       def over_approvals_params
         params.permit(over_approvals: [:checked_confirm, :over_approval_status])[:over_approvals]
+      end
+      
+      def admin_user_true
+        if true == current_user.admin?
+          flash[:danger] = "管理者は利用できません。"
+          redirect_to(root_url)
+        end
       end
 
 end

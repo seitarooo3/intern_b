@@ -7,7 +7,12 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       # ユーザーログイン後にユーザー情報のページにリダイレクトする
       log_in user
-      redirect_to user
+      if true == user.admin?
+        redirect_to root_path
+      else
+        redirect_to user
+      end
+      
     else
       flash.now[:danger] = 'メールアドレスとパスワードの情報が一致しませんでした。'
       render 'new'

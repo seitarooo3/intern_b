@@ -1,12 +1,12 @@
 <% provide(:title, '拠点一覧') %>
 <h1>拠点一覧</h1>
 
-<button type="button" class="btn btn-primary modal-open" data-target="new_branch" >拠点新規作成</button>
+<button type="button" class="btn btn-primary modal-open" data-target="new_branch" >拠点追加</button>
 
 <div id="new_branch" class="modal-content">
   <br>
   <br>
-  <h1>拠点新規作成</h1>
+  <h1>拠点追加</h1>
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <%= form_for(@branch, remote: true) do |f| %>
@@ -18,6 +18,9 @@
         
         <%= f.label :拠点名 %>
         <%= f.text_field :branch_name, class: 'form-control' %>
+        
+        <%= f.label :拠点種類 %>
+        <%= f.text_field :branch_type, class: 'form-control' %>
 
         <br>
         <%= f.submit "新規作成", class: "btn btn-primary" %>
@@ -35,7 +38,7 @@
   <tr>
     <th>拠点番号</th>
     <th>拠点名</th>
-    <th>稼働状況</th>
+    <th>勤怠種類</th>
     <th></th>
     <th></th>
   </tr>
@@ -44,11 +47,7 @@
   <tr>
     <td><%= b.branch_id %></td>
     <td><%= b.branch_name %></td>
-    <% if b.branch_status %>
-      <td>稼働中</td>
-    <% else %>
-      <td>準備中</td>
-    <% end %>
+    <td><%= b.work_type %></td>
     <td><button type="button" class="btn btn-primary modal-open" data-target= "edit_branch_<%= b.branch_id %>" >編集</button></td>
       <div id="edit_branch_<%= b.branch_id %>" class="modal-content">
         <br>
@@ -66,6 +65,9 @@
 
             <%= f.label :拠点名 %>
             <%= f.text_field :branch_name, class: 'form-control' %>
+            
+            <%= f.label :勤怠種類 %>
+            <%= f.text_field :work_type, class: 'form-control' %>
 
             <br>
             <%= f.submit "更新", class: "btn btn-primary" %>

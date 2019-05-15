@@ -1,4 +1,5 @@
 class MonthApprovalsController < ApplicationController
+  before_action :admin_user_true, only: [:update, :sup_update, show, ]
   
   def update
     @user = current_user
@@ -37,10 +38,12 @@ class MonthApprovalsController < ApplicationController
       # チェックがtrueのレコードのみ更新
       if item[:checked] == "true"
         month_approval.update_attributes(item)
+        flash[:success] = '月別勤怠申請を承認/否認しました'
+      else
+        flash[:success] = '変更にチェックされていない為、月別勤怠申請を更新しておりません。'
       end
     end
     
-    flash[:success] = '承認/否認しました'
     redirect_to user_url(@user)
   
   end
@@ -49,6 +52,13 @@ class MonthApprovalsController < ApplicationController
 
       def month_approval_params
         params.permit(month_approvals: [:month_approver_id, :work_month, :checked, :month_approval_status])[:month_approvals]
+      end
+      
+      def admin_user_true
+        if true == current_user.admin?
+          flash[:danger] = "管理者は利用できません。"
+          redirect_to(root_url)
+        end
       end
   
 end

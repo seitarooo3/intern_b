@@ -145,7 +145,7 @@
       <% if @user == current_user %>
         <%= form_for @month_approval do |f| %>
           <%= f.label :sup %>
-          <%= f.collection_select :month_approver_id, User.where(sup: true), :name, :name %>
+          <%= f.collection_select :month_approver_id, @sup_users, :name, :name %>
           <%= f.hidden_field :work_month, :value => @today %>
           <%= f.submit "申請", class: "btn btn-primary" %>
         <% end %>

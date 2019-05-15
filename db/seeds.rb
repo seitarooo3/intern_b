@@ -44,7 +44,8 @@ Branch.create!(
   id: 1,
   branch_id: 1,
   branch_name: "Tokyo",
-  branch_status: false
+  branch_type: "本社",
+  work_type: "出勤"
 )
 
 

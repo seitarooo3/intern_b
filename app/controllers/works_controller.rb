@@ -1,4 +1,6 @@
 class WorksController < ApplicationController
+  before_action :admin_user_true, only: [:create, :edit, :update, :sup_update, :work_log_index, :index_works]
+  
   def create
     @user = User.find(params[:user_id])
     @work = @user.works.find_by(work_date: Date.today)
@@ -9,7 +11,7 @@ class WorksController < ApplicationController
       Time.now.month,
       Time.now.day,
       Time.now.hour,
-      Time.now.min, 0)
+      Time.now.min,)
     )
     
     # work_logsに格納
@@ -52,7 +54,7 @@ class WorksController < ApplicationController
     @today = Date.parse(params[:date])
     @works = @user.works.where('work_date >= ? and work_date <= ?', @today.beginning_of_month, @today.end_of_month).order('work_date')
     @sup_users = User.where(sup: true)
-    
+    @sup_users = @sup_users.where.not(id: @user.id)
   end
   
   def update
@@ -125,11 +127,12 @@ class WorksController < ApplicationController
           @work_log = WorkLog.find_by(work_date: work.work_date)
           @work_log.update(work_change_approved?: true, work_change_approver_id: work.work_change_approver_id, work_change_approver_name: sup_user.name)
         end
-        
+        flash[:success] = '勤怠変更申請を承認/否認しました。'
+      else
+        flash[:success] = '変更にチェックされていない為、勤怠変更申請を更新しておりません。'
       end
     end
     
-    flash[:success] = '勤怠変更申請を承認/否認しました。'
     redirect_to user_url(@user)
     
   end
@@ -191,6 +194,13 @@ class WorksController < ApplicationController
   private
     def works_params
       params.permit(works: [:time_in, :time_out, :note, :work_change_approver_id, :checked_next_day, :checked_confirm, :work_change_status])[:works]
+    end
+    
+    def admin_user_true
+      if true == current_user.admin?
+        flash[:danger] = "管理者は利用できません。"
+        redirect_to(root_url)
+      end
     end
   
 end
