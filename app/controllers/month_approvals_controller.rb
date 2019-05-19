@@ -1,5 +1,5 @@
 class MonthApprovalsController < ApplicationController
-  before_action :admin_user_true, only: [:update, :sup_update, show, ]
+  before_action :admin_user_true, only: [:update, :sup_update ]
   
   def update
     @user = current_user
