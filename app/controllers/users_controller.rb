@@ -152,7 +152,8 @@ class UsersController < ApplicationController
   def import
     # fileはtmpに自動で一時保存される
     User.import(params[:file])
-    redirect_to users_url, notice: "ユーザーを追加しました。"
+    flash[:success] = "ユーザーを追加しました。"
+    redirect_to users_url
   end
   
     private
