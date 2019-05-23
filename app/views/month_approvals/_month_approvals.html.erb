@@ -19,7 +19,7 @@
           <% user.month_approvals.where(month_approval_status: 2, month_approver_id: current_user.id).each do |af| %>
             <%= fields_for "month_approvals[]", af do |aaf| %>
             <tr>
-              <td><%= aaf.text_field :work_month, class: 'form-control', :readonly => true %></td>
+              <td><%= af.work_month.strftime("%m") %></td>
               <td><%= aaf.select :month_approval_status, MonthApproval.month_approval_statuses.keys.to_a, {include_blank: true} %></td>
               <td><%= aaf.check_box :checked, {:checked => false} , "true", "false" %></td>
               <td><%= link_to "確認", user_url(af.user_id,af.work_month), class: "btn btn-primary" %></td>

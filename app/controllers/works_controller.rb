@@ -129,7 +129,7 @@ class WorksController < ApplicationController
         end
         flash[:success] = '勤怠変更申請を承認/否認しました。'
       else
-        flash[:success] = '変更にチェックされていない為、勤怠変更申請を更新しておりません。'
+        # flash[:success] = '変更にチェックされていない為、勤怠変更申請を更新しておりません。'
       end
     end
     

@@ -57,7 +57,7 @@ class OverApprovalsController < ApplicationController
         over_approval.update_attributes(item)
         flash[:success] = '残業申請を承認/否認しました。'
       else
-        flash[:success] = '変更にチェックされていない為、残業申請は更新しておりません。'
+        # flash[:success] = '変更にチェックされていない為、残業申請は更新しておりません。'
       end
     end
     

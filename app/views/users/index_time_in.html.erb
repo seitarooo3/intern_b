@@ -2,7 +2,7 @@
 <h1>出勤社員一覧</h1>
 <ul>
   <% @time_in_users.each do |user| %>
-    <li><%= link_to user.name, user %></li>
+    <li><%= user.name %></li>
   <% end %>
 </ul>
 

@@ -40,6 +40,20 @@ User.create!(
   dep: "sales"
 )
 
+User.create!(
+  id: 4,
+  name: "konosuke2",
+  email: "konosuke2.aoki@gmail.com",
+  card_id: "foobar",
+  employee_id: 12345,
+  password: "foobar",
+  basic_time: "2019/02/20 07:30",
+  work_time: "2019/02/20 07:30",
+  admin: false,
+  sup: true,
+  dep: "boxer"
+)
+
 Branch.create!(
   id: 1,
   branch_id: 1,

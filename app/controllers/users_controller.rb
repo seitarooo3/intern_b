@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user,   only: [:edit, :update, :show]
-  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index]
+  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info, :index, :index_time_in, :import]
   before_action :admin_user_true, only: [:show]
   
   def show
@@ -114,6 +114,7 @@ class UsersController < ApplicationController
     @users = User.paginate(page: params[:page])
   end
   
+  # 出勤中社員一覧表示
   def index_time_in
     today = Date.current
     @time_in_works = Work.where(work_date: today, time_out: nil)
@@ -192,7 +193,8 @@ class UsersController < ApplicationController
     end
     
     def admin_user_true
-      if true == current_user.admin?
+      @user = User.find(params[:id])
+      if true == current_user.admin && @user.id == current_user.id
         flash[:danger] = "管理者は利用できません。"
         redirect_to(root_url)
       end

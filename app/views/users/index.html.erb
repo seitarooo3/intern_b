@@ -9,11 +9,16 @@
 
 <ul class="users">
   <% @users.each do |user| %>
-    <li>
-  <%= link_to user.name, user %>
-  <% if @current_user.admin? && !current_user?(user) %>
+  <li>
+  <% if true == user.admin %>
+    <%= user.name %>
+  <% else %>
+    <%= link_to user.name, user %>
+  <% end %> 
+  <% if false == user.admin %>
   <%= button_to "削除", user, method: :delete, class: "btn btn-primary",
                          data: { confirm: "削除してよろしいですか？" } %>
+  <% end %>
   
   <div class="panel-group" id=accordion>
 	  <div class="panel panel-default">
@@ -65,7 +70,7 @@
 			</div>
 		</div>
 	</div>
-  <% end %>
+	
 </li>
   <% end %>
 </ul>

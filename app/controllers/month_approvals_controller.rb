@@ -40,7 +40,7 @@ class MonthApprovalsController < ApplicationController
         month_approval.update_attributes(item)
         flash[:success] = '月別勤怠申請を承認/否認しました'
       else
-        flash[:success] = '変更にチェックされていない為、月別勤怠申請を更新しておりません。'
+        # flash[:success] = '変更にチェックされていない為、月別勤怠申請を更新しておりません。'
       end
     end
     
