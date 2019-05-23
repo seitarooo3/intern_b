@@ -31,8 +31,21 @@
             <tr>
               <td><%= af.work_date.month %>/<%= af.work_date.day %></td>
               <td><%= %w(日 月 火 水 木 金 土)[af.work_date.wday] %></td>
-              <td>変更前</td>
-              <td>変更前</td>
+              
+              <td>
+                <% unless WorkLog.find_by(work_date: af.work_date).nil? %>
+                  <% @work_log = WorkLog.find_by(work_date: af.work_date) %>
+                  <% unless @work_log.pre_time_in.nil? %>
+                    <%= @work_log.pre_time_in.strftime("%H:%M") %>
+                  <% end %>
+              </td>
+              <td>
+                  <% unless @work_log.pre_time_in.nil? %>
+                    <%= @work_log.pre_time_out.strftime("%H:%M") %>
+                  <% end %>
+                <% end %>
+              </td>
+              
               <td><%= af.time_in.strftime("%H:%M") %></td>
               <td><%= af.time_out.strftime("%H:%M") %></td>
               <td><%= af.note %></td>

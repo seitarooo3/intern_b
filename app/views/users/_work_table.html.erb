@@ -127,7 +127,7 @@
         <% if true == @user.over_approvals.find_by(over_date: @work.work_date).present? %>
           <% @sup_user_over_approval = User.find(@over_approval.over_approver_id) %>
           <%= @sup_user_over_approval.name %>：残業<%= @over_approval.over_approval_status %>
-        <% end %>
+        <% end %><br>
         <% if "申請中" == @work.work_change_status || "承認" == @work.work_change_status || "否認" == @work.work_change_status  %>
         <% puts @work.work_change_approver_id %>
           <% @sup_user_work_change = User.find(@work.work_change_approver_id) %>
