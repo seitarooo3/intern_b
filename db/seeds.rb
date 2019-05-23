@@ -36,7 +36,7 @@ User.create!(
   basic_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
   admin: true,
-  sup: true,
+  sup: false,
   dep: "sales"
 )
 

@@ -41,7 +41,7 @@ class UsersController < ApplicationController
       record.save
       @month_approval = @user.month_approvals.find_by(work_month: @today.beginning_of_month)
     end
-
+    
     # TBLから承認者がログインユーザー且つ月別勤怠申請中のデータを格納
     @month_applyings = MonthApproval.where(month_approval_status: 2).where(month_approver_id: current_user.id)
     
