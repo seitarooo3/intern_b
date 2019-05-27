@@ -22,7 +22,7 @@
               <td><%= f.time_field :scheduled_over_time_out, class: "form-control" %></td>
               <td><%= f.check_box :checked_next_day, {:checked => false} , "true", "false" %></td>
               <td><%= f.text_field :note, class: "form-control" %></td>
-              <td><%= f.collection_select :over_approver_id, @sup_users, :id, :name %></td>
+              <td><%= f.collection_select :over_approver_id, @sup_users, :id, :name, :include_blank => true %></td>
               <%= f.hidden_field :over_approval_status, :value => "申請中" %>
               <%= f.hidden_field :user_id, :value => @user.id %>
               <%= f.hidden_field :over_date, :value => day.work_date %>

@@ -12,13 +12,15 @@ class MonthApprovalsController < ApplicationController
     month_approver_name = params[:month_approval][:month_approver_id]
     sup_user = User.find_by(name: month_approver_name)
     
-    if true == @month_approval.update(month_approver_id: sup_user.id, month_approval_status: 2)
+    if params[:month_approval][:month_approver_id].present?
+      @month_approval.update(month_approver_id: sup_user.id, month_approval_status: 2)
       flash[:success] = "申請完了しました。"
-      redirect_to @user      
+      redirect_to user_url(@user, params:{current_date: @month_approval.work_month})
     else
-      flash.now[:danger] = 'エラーが発生しました。'
-      redirect_to @user 
+      flash[:danger] = '承認者を設定してください。'
+      redirect_to user_url(@user, params:{current_date: @month_approval.work_month}) 
     end
+
   end
   
   def sup_update

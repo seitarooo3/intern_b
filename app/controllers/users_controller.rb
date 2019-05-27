@@ -160,7 +160,7 @@ class UsersController < ApplicationController
     private
 
       def user_params
-        params.require(:user).permit(:name, :email, :dep, :password, :password_confirmation, :designed_time_in, :designed_time_out, :card_id, :employee_id)
+        params.require(:user).permit(:name, :email, :dep, :password, :password_confirmation, :designed_time_in, :designed_time_out, :card_id, :employee_id, :basic_time)
       end
       
       def basic_info_params

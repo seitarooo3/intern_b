@@ -65,7 +65,7 @@ class WorksController < ApplicationController
       works_params.each do |id, item|
         work = Work.find(id)
         
-        # 申請情報の内、承認者が設定されている且つ出勤・退勤時刻のいずれかが変更されたレコードのみ更新
+        # 更新対象の抽出（申請情報の内、承認者が設定されている且つ出勤・退勤時刻いずれもが格納されたレコードのみ更新。）
         if item[:work_change_approver_id].present? && item[:time_in].present? && item[:time_out].present?
           
           # 新規の場合
@@ -82,7 +82,7 @@ class WorksController < ApplicationController
             
             @work_log.save
             
-          # 更新の場合
+          # 更新の場合（出勤時間、退勤時間、承認者のいずれかに変更がある場合）
           elsif work.time_in.strftime("%H:%M") != item[:time_in].to_s[0..4] || work.time_out.strftime("%H:%M") != item[:time_out].to_s[0..4] || work.work_change_approver_id != item[:work_change_approver_id].to_i
             work.update_attributes(item)
             work.update(time_in: set_date_to_time_in(work), time_out: set_date_to_time_out(work))
@@ -170,6 +170,7 @@ class WorksController < ApplicationController
   def index_works
     @user = current_user
     
+    # 以下のparams[:current_date]はURL上のparamsではなく、CSV出力ボタンから受け渡されたparams
     if params[:current_date].nil?
       @today = Date.today
     else
@@ -180,6 +181,9 @@ class WorksController < ApplicationController
     # 無ければ空データ作成、有れば表示させるメソッド
     @work = @user.works.find_by(work_date: @today)
     @works = @user.works.where('work_date >= ? and work_date <= ?', @today.beginning_of_month, @today.end_of_month).order('work_date')
+    puts "せいのすけ"
+    puts @today
+    puts @work.work_date
     
     respond_to do |format|
       format.html do
@@ -193,7 +197,7 @@ class WorksController < ApplicationController
   
   private
     def works_params
-      params.permit(works: [:time_in, :time_out, :note, :work_change_approver_id, :checked_next_day, :checked_confirm, :work_change_status])[:works]
+      params.permit(works: [:work_date, :time_in, :time_out, :note, :work_change_approver_id, :checked_next_day, :checked_confirm, :work_change_status])[:works]
     end
     
     def admin_user_true

@@ -51,7 +51,7 @@
               <td><%= af.note %></td>
               <td><%= aaf.select :work_change_status, Work.work_change_statuses.keys.to_a, {include_blank: true} %></td>
               <td><%= aaf.check_box :checked_confirm, {:checked => false} , "true", "false" %></td>
-              <td><%= link_to "確認", user_url(af.user_id,af.work_date), class: "btn btn-primary" %></td>
+              <td><%= link_to "確認", user_url(user, params:{current_date: af.work_date}), class: "btn btn-primary" %></td>
             </tr>
             <% end %>
             

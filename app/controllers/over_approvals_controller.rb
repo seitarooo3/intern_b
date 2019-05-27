@@ -5,8 +5,18 @@ class OverApprovalsController < ApplicationController
   def create
     @user = current_user
     
+    if over_approval_params[:over_approver_id].blank?
+      
+      flash[:danger] = '承認者を選択してください。'
+      redirect_to @user
+    
+    elsif over_approval_params[:scheduled_over_time_out].blank?
+      
+      flash[:danger] = '終了予定時刻を入力してください。'
+      redirect_to @user
+    
     # 残業申請済みであればupdate,新規残業申請であればcreateされるように条件分岐
-    if OverApproval.find_by(over_date: over_approval_params[:over_date]).nil?
+    elsif OverApproval.find_by(over_date: over_approval_params[:over_date]).nil?
       
       @over_approval = OverApproval.new(over_approval_params)
       
@@ -15,11 +25,11 @@ class OverApprovalsController < ApplicationController
       
       if true == @over_approval.save(over_approval_params)
         flash[:success] = "残業申請しました。"
-        redirect_to user_url(@user)
       else
-        flash.now[:danger] = 'エラーが発生しました。'
-        redirect_to user_url(@user)
+        flash[:danger] = 'エラーが発生しました。'
       end
+      
+      redirect_to user_url(@user, params:{current_date: @over_approval.over_date})
 
     else
       # すでに残業申請済みのレコードを変数@over_approvalに格納
@@ -29,14 +39,14 @@ class OverApprovalsController < ApplicationController
         # changeメソッドで日付を正しくしたものを取り出したものをtime_outに格納するメソッド呼び出し
         @over_approval.update_attribute(:scheduled_over_time_out, set_date_to_over_date(@over_approval))
         flash[:success] = "残業申請しました。"
-        redirect_to user_url(@user)
+        redirect_to user_url(@user, params:{current_date: @over_approval.over_date})
       else
         flash.now[:danger] = 'エラーが発生しました。'
-        redirect_to user_url(@user)
+        redirect_to user_url(@user, params:{current_date: @over_approval.over_date})
       end
       
     end
-    
+
   end
   
   def sup_update
@@ -83,7 +93,7 @@ class OverApprovalsController < ApplicationController
     private
 
       def over_approval_params
-        params.permit(over_approval: [:user_id, :over_approver_id, :over_date, :scheduled_over_time_out, :checked_next_day, :over_approval_status, :note])[:over_approval]
+        params.require(:over_approval).permit(:user_id, :over_approver_id, :over_date, :scheduled_over_time_out, :checked_next_day, :over_approval_status, :note)
       end
       
       def over_approvals_params

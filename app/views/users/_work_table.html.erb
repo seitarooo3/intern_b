@@ -31,7 +31,8 @@
   <% if @user == current_user %>
     <%= link_to "勤怠を編集", edit_works_url(@user.id,@work.work_date), class: "btn btn-primary" %>
     <%= link_to "勤怠ログ", work_log_index_path, class: "btn btn-primary" %>
-    <%= link_to "CSV出力", index_works_path(format: :csv), class: "btn btn-primary" %>
+    <!--CSVの情報と、paramsに格納されている現在の日付をindex_worksメソッドに値渡し-->
+    <%= link_to "CSV出力", index_works_path(format: :csv, current_date: params[:current_date]), class: "btn btn-primary" %>
   <% end %>
 </div>
 
@@ -141,11 +142,16 @@
     <td colspan = "7">総合勤務時間:<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time).to_f * @work_sum %> <% end %></td>
     <td colspan = "2">在社時間合計:<%= working_hours_sum(@total_seconds) unless @total_seconds.nil? %></td>
     <td colspan = "4">
-      月別勤怠申請状況：<%= @month_approval.month_approval_status %>
+      <% if @month_approval.month_approver_id.nil? %>
+        所属長承認申請：<%= @month_approval.month_approval_status %>
+      <% else %>
+        <% @month_approver_user = User.find(@month_approval.month_approver_id) %>
+        <%= @month_approver_user.name %>：<%= @month_approval.month_approval_status %>
+      <% end %>
       <% if @user == current_user %>
         <%= form_for @month_approval do |f| %>
-          <%= f.label :sup %>
-          <%= f.collection_select :month_approver_id, @sup_users, :name, :name %>
+          <%= f.label :所属長 %>
+          <%= f.collection_select :month_approver_id, @sup_users, :name, :name, :include_blank => true %>
           <%= f.hidden_field :work_month, :value => @today %>
           <%= f.submit "申請", class: "btn btn-primary" %>
         <% end %>

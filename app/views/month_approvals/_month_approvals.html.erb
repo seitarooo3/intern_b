@@ -22,7 +22,7 @@
               <td><%= af.work_month.strftime("%m") %></td>
               <td><%= aaf.select :month_approval_status, MonthApproval.month_approval_statuses.keys.to_a, {include_blank: true} %></td>
               <td><%= aaf.check_box :checked, {:checked => false} , "true", "false" %></td>
-              <td><%= link_to "確認", user_url(af.user_id,af.work_month), class: "btn btn-primary" %></td>
+              <td><%= link_to "確認", user_url(user, params:{current_date: af.work_month}), class: "btn btn-primary" %></td>
             </tr>
             <% end %>
             

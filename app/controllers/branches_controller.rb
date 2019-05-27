@@ -1,4 +1,6 @@
 class BranchesController < ApplicationController
+  before_action :admin_user,     only: [:index]
+  
   def index
     @branches = Branch.all
     @branch = Branch.new
@@ -17,7 +19,7 @@ class BranchesController < ApplicationController
       redirect_to branches_url
     else
       flash[:danger] = 'エラーが発生しました。'
-      redirect_to '/branches'
+      redirect_to branches_url
     end
     
   end
@@ -45,8 +47,14 @@ class BranchesController < ApplicationController
 
     private
       def branch_params
-        params.require(:branch).permit(:branch_id, :branch_name, :branch_status, :work_type)
+        params.require(:branch).permit(:branch_id, :branch_name, :work_type)
       end
-      
+
+      def admin_user
+        if false == current_user.admin?
+          flash[:danger] = "管理者権限がありません。"
+          redirect_to(root_url)
+        end
+      end
 
 end

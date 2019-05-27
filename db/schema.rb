@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20190515025747) do
   create_table "branches", force: :cascade do |t|
     t.integer "branch_id"
     t.string "branch_name"
-    t.boolean "branch_type"
     t.string "work_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

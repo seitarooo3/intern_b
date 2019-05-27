@@ -40,6 +40,7 @@
             <td><%= af.text_field :note, class: "form-control" %></td>
             <td><%= af.collection_select :work_change_approver_id, @sup_users, :id, :name, :include_blank => true %></td>
                 <%= af.hidden_field :work_change_status, :value => "申請中" %>
+                <%= af.hidden_field :work_date, :value => work.work_date %>
           </tr>
           <% end %>
         <% end %>
