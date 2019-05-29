@@ -53,7 +53,7 @@ class WorksController < ApplicationController
     # 「勤怠を編集」ボタン押下時に引数に指定した日付（user_helperのcurrent_date）がURLに含まれているため、そこから値を取得
     @today = Date.parse(params[:date])
     @works = @user.works.where('work_date >= ? and work_date <= ?', @today.beginning_of_month, @today.end_of_month).order('work_date')
-    @sup_users = User.where(sup: true)
+    @sup_users = User.where(superior: true)
     @sup_users = @sup_users.where.not(id: @user.id)
   end
   

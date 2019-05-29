@@ -3,18 +3,18 @@
   <table class="table table-bordered" align="center" width="100%">
   <tr>
     <td><% if @user == current_user %><%= link_to "◀︎", prev_month, class: "btn btn-primary" %><% end %>　  <%= @today.year %>年<%= @today.month %>月 勤怠管理表　<% if @user == current_user %><%= link_to "▶︎︎", next_month, class: "btn btn-primary" %> <% end %> </td>
-    <td>指定勤務開始時間：<%= @user.designed_time_in.strftime('%H:%M') %><br>
-        指定勤務終了時間：<%= @user.designed_time_out.strftime('%H:%M') %></td>
-    <td colspan="3">基本時間：<% if @user.basic_time.present? %><%= format_basic_time(@user.work_time) %><% end %></td>
+    <td>指定勤務開始時間：<%= @user.designed_work_start_time.strftime('%H:%M') %><br>
+        指定勤務終了時間：<%= @user.designed_work_end_time.strftime('%H:%M') %></td>
+    <td colspan="3">基本時間：<% if @user.basic_work_time.present? %><%= format_basic_time(@user.work_time) %><% end %></td>
     <td>初日：<%= @today.month %>月<%= @today.beginning_of_month.day %>日</td>
   </tr>
   
   <tr>
-    <td>所属：<%= @user.dep %></td>
+    <td>所属：<%= @user.affiliation %></td>
     <td>氏名：<%= @user.name %></td>
     
     <td>コード</td>
-    <td><%= @user.card_id %></td>
+    <td><%= @user.uid %></td>
     <td>出勤日数:<%= @work_sum %>日</td>
     
     <td>締日：<%= @today.month %>月<%= @today.end_of_month.day %>日</td>

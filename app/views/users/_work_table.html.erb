@@ -2,7 +2,7 @@
 <!--お知らせ-->
 
 <div>
-<% if @user == current_user && true == current_user.sup? %>
+<% if @user == current_user && true == current_user.superior? %>
 
   <a class = "modal-open" data-target = "month_approval">【月別勤怠申請のお知らせ】</a>
   <% if @month_applyings.any? %>
@@ -139,7 +139,7 @@
   <% end %>
   
   <tr>
-    <td colspan = "7">総合勤務時間:<% if @user.basic_time.present? %><%= format_basic_time(@user.basic_time).to_f * @work_sum %> <% end %></td>
+    <td colspan = "7">総合勤務時間:<% if @user.basic_work_time.present? %><%= format_basic_time(@user.basic_work_time).to_f * @work_sum %> <% end %></td>
     <td colspan = "2">在社時間合計:<%= working_hours_sum(@total_seconds) unless @total_seconds.nil? %></td>
     <td colspan = "4">
       <% if @month_approval.month_approver_id.nil? %>

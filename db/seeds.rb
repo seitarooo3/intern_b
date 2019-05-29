@@ -2,56 +2,56 @@ User.create!(
   id: 1,
   name: "seinosuke",
   email: "seinosuke.aoki@gmail.com",
-  card_id: "takosei3",
-  employee_id: 12345,
+  uid: "takosei3",
+  employee_number: 12345,
   password: "foobar",
-  basic_time: "2019/02/20 07:30",
+  basic_work_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
   admin: false,
-  sup: false,
-  dep: "consulting"
+  superior: false,
+  affiliation: "consulting"
 )
 
 User.create!(
   id: 2,
   name: "konosuke",
   email: "konosuke.aoki@gmail.com",
-  card_id: "foobar",
-  employee_id: 12345,
+  uid: "foobar",
+  employee_number: 12345,
   password: "foobar",
-  basic_time: "2019/02/20 07:30",
+  basic_work_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
   admin: false,
-  sup: true,
-  dep: "boxer"
+  superior: true,
+  affiliation: "boxer"
 )
 
 User.create!(
   id: 3,
   name: "takanosuke",
   email: "takanosuke.aoki@gmail.com",
-  card_id: "foobar",
-  employee_id: 12345,
+  uid: "foobar",
+  employee_number: 12345,
   password: "foobar",
-  basic_time: "2019/02/20 07:30",
+  basic_work_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
   admin: true,
-  sup: false,
-  dep: "sales"
+  superior: false,
+  affiliation: "sales"
 )
 
 User.create!(
   id: 4,
   name: "konosuke2",
   email: "konosuke2.aoki@gmail.com",
-  card_id: "foobar",
-  employee_id: 12345,
+  uid: "foobar",
+  employee_number: 12345,
   password: "foobar",
-  basic_time: "2019/02/20 07:30",
+  basic_work_time: "2019/02/20 07:30",
   work_time: "2019/02/20 07:30",
   admin: false,
-  sup: true,
-  dep: "boxer"
+  superior: true,
+  affiliation: "boxer"
 )
 
 Branch.create!(

@@ -26,7 +26,7 @@
               <td><%= af.over_date.month %>/<%= af.over_date.day %></td>
               <td><%= %w(日 月 火 水 木 金 土)[af.over_date.wday] %></td>
               <td><%= af.scheduled_over_time_out.strftime("%H:%M") %></td>
-              <td><%= user.designed_time_out.strftime("%H:%M") %></td>
+              <td><%= user.designed_work_end_time.strftime("%H:%M") %></td>
               <td><%= over_work_hours(user,af) %></td>
               <td><%= af.note %></td>
               <td><%= aaf.select :over_approval_status, OverApproval.over_approval_statuses.keys.to_a, {include_blank: true} %></td>

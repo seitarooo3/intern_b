@@ -50,17 +50,17 @@ ActiveRecord::Schema.define(version: 20190515025747) do
     t.string "name"
     t.string "email"
     t.string "password_digest"
-    t.datetime "basic_time", default: "2019-03-20 07:30:00"
+    t.datetime "basic_work_time", default: "2019-03-20 07:30:00"
     t.datetime "work_time", default: "2019-03-20 08:00:00"
-    t.datetime "designed_time_in", default: "2019-03-20 09:00:00"
-    t.datetime "designed_time_out", default: "2019-03-20 18:00:00"
+    t.datetime "designed_work_start_time", default: "2019-03-20 09:00:00"
+    t.datetime "designed_work_end_time", default: "2019-03-20 18:00:00"
     t.boolean "admin", default: false
-    t.string "dep"
+    t.string "affiliation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "card_id", default: "5555"
-    t.integer "employee_id"
-    t.boolean "sup", default: false
+    t.string "uid", default: "5555"
+    t.integer "employee_number"
+    t.boolean "superior", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

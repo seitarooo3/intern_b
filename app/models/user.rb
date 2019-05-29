@@ -28,7 +28,7 @@ class User < ApplicationRecord
 
   # csv更新を許可するカラムを定義
   def self.updatable_attributes
-    ["id", "email","name", "dep", "employee_id", "card_id", "basic_time", "designed_time_in", "designed_time_out", "sup", "admin", "password"]
+    ["id", "email","name", "affiliation", "employee_number", "uid", "basic_work_time", "designed_work_start_time", "designed_work_end_time", "superior", "admin", "password"]
   end
   
 end

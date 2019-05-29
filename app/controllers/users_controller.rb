@@ -65,7 +65,7 @@ class UsersController < ApplicationController
     
     @over_applying_users = User.where(id: over_applying_users_ids)
     
-    @sup_users = User.where(sup: true)
+    @sup_users = User.where(superior: true)
     @sup_users = @sup_users.where.not(id: @user.id)
     
     @work_changings = Work.where(work_change_status: 2).where(work_change_approver_id: current_user.id)
@@ -101,13 +101,22 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    if true == @user.update_attributes(user_params)
+    
+    if user_params[:password_confirmation].blank? && user_params[:password].present?
+      flash[:danger] = 'パスワード(確認用)を入力してください。'
+    
+    elsif user_params[:password_confirmation].present? && user_params[:password].blank?
+      flash[:danger] = 'パスワードを入力してください。'
+    
+    elsif true == @user.update_attributes(user_params)
       flash[:success] = "更新完了しました。"
-      redirect_to users_path
+      
     else
-      flash.now[:danger] = 'エラーが発生しました。'
-      render users_path
+      flash[:danger] = 'エラーが発生しました。'
     end
+    
+    redirect_to users_url
+    
   end
   
   def index
@@ -136,14 +145,14 @@ class UsersController < ApplicationController
   end
   
   def edit_basic_info
-    @user = User.find(params[:id])
+    
   end
   
   def update_basic_info
     @user = User.find(params[:id])
     if @user.update_attributes(basic_info_params)
       flash[:success] = "基本情報を更新しました。"
-      redirect_to @user   
+      redirect_to @user
     else
       render 'edit_basic_info'
     end
@@ -151,20 +160,27 @@ class UsersController < ApplicationController
   end
   
   def import
-    # fileはtmpに自動で一時保存される
-    User.import(params[:file])
-    flash[:success] = "ユーザーを追加しました。"
-    redirect_to users_url
+    
+    if params[:file].nil?
+      flash[:danger] = "CSVファイルを選択してください。"
+      redirect_to users_url
+    else
+       # fileはtmpに自動で一時保存される
+      User.import(params[:file])
+      flash[:success] = "ユーザーを追加しました。"
+      redirect_to users_url
+    end
+
   end
   
     private
 
       def user_params
-        params.require(:user).permit(:name, :email, :dep, :password, :password_confirmation, :designed_time_in, :designed_time_out, :card_id, :employee_id, :basic_time)
+        params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :designed_work_start_time, :designed_work_end_time, :uid, :employee_number, :basic_work_time)
       end
       
       def basic_info_params
-        params.require(:user).permit(:basic_time, :work_time)
+        params.require(:user).permit(:basic_work_time, :work_time)
       end
 
     # beforeアクション
@@ -179,7 +195,7 @@ class UsersController < ApplicationController
     
     def correct_user
       @user = User.find(params[:id])
-      if @user != current_user && false == current_user.admin? && false == current_user.sup?
+      if @user != current_user && false == current_user.admin? && false == current_user.superior?
         flash[:danger] = "権限がありません。"
         redirect_to(root_url)
       end

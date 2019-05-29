@@ -38,25 +38,25 @@
             <%= f.text_field :name, class: 'form-control' %>
             <br>
             <%= f.label:カードID %>
-          　<%= f.text_field :card_id, class: 'form-control' %>
+          　<%= f.text_field :uid, class: 'form-control' %>
           　<br>
           　<%= f.label:社員ID %>
-          　<%= f.text_field :employee_id, class: 'form-control' %>
+          　<%= f.text_field :employee_number, class: 'form-control' %>
             <br>
           　<%= f.label:メールアドレス %>
           　<%= f.email_field :email, class: 'form-control' %>
             <br>
             <%= f.label:部署 %>
-          　<%= f.text_field :dep, class: 'form-control' %>
+          　<%= f.text_field :affiliation, class: 'form-control' %>
           　<br>
           　<%= f.label:指定勤務開始時間 %>
-          　<%= f.time_field :designed_time_in, class: "form-control" %>
+          　<%= f.time_field :designed_work_start_time, class: "form-control" %>
           　<br>
           　<%= f.label:指定勤務終了時間 %>
-            <%= f.time_field :designed_time_out, class: "form-control" %>
+            <%= f.time_field :designed_work_end_time, class: "form-control" %>
             <br>
             <%= f.label:基本時間 %>
-            <%= f.time_field :basic_time, class: "form-control" %>
+            <%= f.time_field :basic_work_time, class: "form-control" %>
             <br>
             <%= f.label:パスワード %>
             <%= f.password_field :password, class: 'form-control' %>
